@@ -297,10 +297,13 @@ class OSSFileSystem(BaseOSSFileSystem):  # pylint:disable=too-many-public-method
         are guaranteed to be the same. If the checksum changes, the contents
         *might* have changed.
 
-        This should normally be overridden; default will probably capture
-        creation/modification timestamp (which would be good) or maybe
-        access timestamp (which would be bad)
+        The default will capture creation/modification timestamp (which would
+        be good) or maybe access timestamp (which would be bad). The etag can
+        be seen as a unique checksum of the file content (It does not take file
+        metadata into account).
         """
+        if "etag" in self.info(path):
+            return self.info(path)["etag"]
         return sha256(
             (str(self.ukey(path)) + str(self.info(path))).encode()
         ).hexdigest()
