@@ -191,6 +191,8 @@ class BaseOSSFileSystem(AbstractFileSystem):
             "type": "file",
             "size": obj.size,
         }
+        if obj.etag:
+            data["etag"] = obj.etag
         if obj.last_modified:
             data["LastModified"] = obj.last_modified
         if obj.is_prefix():
